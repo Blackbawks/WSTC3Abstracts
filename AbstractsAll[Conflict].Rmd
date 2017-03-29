@@ -2,26 +2,19 @@
 title: "WSTC3 Abstracts"
 author: "World Seabird Union"
 output:
-  word_document: default
   pdf_document: default
   html_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 library(dplyr)
-library(readxl)
 
-X <- readRDS("Abstracts.rds")
+X <- tbl_df(read.csv('AbstractsV2.csv'))
 
-Y <- select(X, First, Last, Email, Handle, Country, Affiliation, Title, Abstract, DateTimeUTC, LocalTimeUTC, Timezone)
-
-UTCtime <- round(strptime(as.character(Y$DateTimeUTC),format="%Y-%m-%d %H:%M:%S"), units='min')
-Localtime <- round(strptime(as.character(Y$LocalTimeUTC),format="%Y-%m-%d %H:%M:%S"),units='min')
-Y$UTCTm <- paste("April ",as.character(UTCtime$mday)," ",format(UTCtime, "%H:%M"),sep="")
-Y$LOCTm <- paste("April ",as.character(Localtime$mday)," ",format(Localtime, "%H:%M"),sep="")
-
+Y <- select(X, First, Last, Email, Handle, Country, Affiliation, Title, Abstract)
 
 ```
 
@@ -37,9 +30,6 @@ for(x in 1:nrow(Y)){
   cat('<td>COUNTRY: ',as.character(Y$Country[x]),'</td>')
   cat('<td>AFFILIATION: ',as.character(Y$Affiliation[x]),'</td>')
   cat('<td>E-MAIL: ',as.character(Y$Email[x]),'</td>')
-  cat('<td>PRESENTATION TIME (UTC):', Y$UTCTm[x],'</td>')
-  cat('<td>PRESENTATION TIME (LOCAL):', Y$LOCTm[x],'</td>')
-  cat('<td>LOCAL TIME ZONE (UTC OFFSET):', Y$Timezone[x],'</td>' )
   cat('TITLE: ')
   cat('*',as.character(Y$Title[x]),'*','  \n',sep='')
   cat('<tr style="border-style:solid; border-bottom-color: #000;border-top-color: #fff; border-left-color:#fff;border-right-color:#ffff; border-width: 1px;" ><td style="padding-bottom:20px;" colspan=5>ABSTRACT: ',as.character(Y$Abstract[x]),'</td></tr>')
